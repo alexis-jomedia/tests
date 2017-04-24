@@ -1,4 +1,6 @@
 *.log
 .idea
-.idea/*
 .vagrant
+mysql_content_import/console/local.conf
+mysql_content_import/vendor
+edition_local
