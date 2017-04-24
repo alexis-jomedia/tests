@@ -7,6 +7,8 @@ sudo apt-get -y update
 
 sudo apt-get -y install libpcre3
 
+echo "=== Installing Git ==="
+sudo apt-get -y install git
 # Installing Apache
 #echo "=== Installing Apache2 ==="
 #sudo apt-get -y install apache2

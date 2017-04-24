@@ -1,0 +1,20 @@
+{
+  "author": [
+    {
+      "name": "CACHAT, Alexis",
+      "email": "alexis.cachat@jomediainc.com"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "": "src/"
+    },
+    "psr-4": {
+      "Console\\": "console/src"
+    }
+  },
+  "require": {
+    "php": "^7.0",
+    "monolog/monolog": "~1.0"
+  }
+}

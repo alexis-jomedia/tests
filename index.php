@@ -6,4 +6,5 @@
  * Time: 10:15 AM
  */
 
+
 echo phpinfo();
