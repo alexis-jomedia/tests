@@ -10,11 +10,11 @@
       "": "src/"
     },
     "psr-4": {
-      "Console\\": "console/src"
+      "workers\\": "src"
     }
   },
   "require": {
     "php": "^7.0",
-    "monolog/monolog": "~1.0"
+    "monolog/monolog": "^1.22"
   }
 }

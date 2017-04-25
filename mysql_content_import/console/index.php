@@ -1,9 +1,11 @@
 <?php
 
+require_once '../vendor/autoload.php';
 //use workers\Books as Books;
 //require_once 'Books.php';
-use workers\Uniques;
-use workers\Books;
+//use workers\Uniques;
+//use workers\Books;
+use Monolog\Logger;
 /**
  * Created by PhpStorm.
  * User: alexis
@@ -11,8 +13,9 @@ use workers\Books;
  * Time: 11:27 AM
  */
 
-echo "\n### Database ####\n";
-echo "### Connecting ###\n";
+$logger = new Logger('mysql_import');
+$logger->addInfo("\n### Database ####\n");
+$logger->addInfo("### Connecting ###\n");
 require_once('local.conf');
 
 $conn = mysqli_connect(
@@ -21,13 +24,8 @@ $conn = mysqli_connect(
     $conf['mysql']['password'],
     $conf['mysql']['database']) or die ('CAN NOT CONNECT TO DB');
 
-echo "### Connection done ###\n";
-echo "### Database done ###\n\n";
-//$sql = 'SELECT * FROM music ORDER BY id DESC LIMIT 1';
-//$result = mysqli_query($conn, $sql);
-//$data = mysqli_fetch_all($result);
-//var_dump($data);
-
+$logger->addInfo("### Connection done ###\n");
+$logger->addInfo("### Database done ###\n\n");
 
 /**
  * m => media type
@@ -46,16 +44,17 @@ if (
     exit(1);
 }
 
-echo "### Main process start ###\n";
-echo "### Proceeding with media type " . $params['media-type'] . " ###\n";
+$logger->addInfo("### Main process start ###\n");
+$logger->addInfo("### Proceeding with media type " . $params['media-type'] . " ###\n");
 $limit = (array_key_exists('limit', $params)) ?
     $params['limit']:null;
 
 try {
-    $className = ucfirst($params['media-type']);
+    $className = 'workers\\' . ucfirst($params['media-type']);
     $class = new $className($conn, $limit);
     $class->process();
     echo "### " . $params['media-type'] . " data sampling done ###\n";
+    $conn->close();
     exit(0);
 } catch (Exception $e) {
     error_log($e->getMessage());
