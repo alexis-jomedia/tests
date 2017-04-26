@@ -25,7 +25,12 @@ class Base
 
     public $limit = null;
 
-    public function __construct($conn, $limit)
+    /**
+     * Base constructor.
+     * @param \mysqli $conn
+     * @param int     $limit Number of results, if needed. Default to 1000.
+     */
+    public function __construct($conn, $limit = 1000)
     {
         $this->logger = new Logger('mysql_import');
         $this->conn = $conn;
@@ -62,11 +67,27 @@ class Base
                 $arrKeys[] = $key;
             }
 
-            $sql = "INSERT INTO $fileName (" . implode(',', $arrKeys) . ") VALUES (";
+            $sql = "INSERT IGNORE INTO $fileName (" . implode(',', $arrKeys) . ") VALUES (";
             $sql .= implode(',', $arrValues) . ');' . PHP_EOL;
             fwrite($fp, $sql);
         }
 
         fclose($fp);
+    }
+
+    /**
+     * Process a given table
+     *
+     * @param string $tableName Name of the table to process.
+     * @param string $options   Specific options to pass to the sql string. Default to empty string.
+     */
+    protected function processTable($tableName, $options = '')
+    {
+        $this->logger->addInfo("*** $tableName ***");
+        $sql = "SELECT $tableName.* FROM $tableName $options";
+        /** @var \mysqli_result */
+        $res = $this->conn->query($sql);
+        $this->writeToFile($tableName, $res);
+        $this->logger->addInfo("*** $tableName done ***");
     }
 }

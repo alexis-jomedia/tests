@@ -53,7 +53,7 @@ try {
     $className = 'workers\\' . ucfirst($params['media-type']);
     $class = new $className($conn, $limit);
     $class->process();
-    echo "### " . $params['media-type'] . " data sampling done ###\n";
+    $logger->addInfo("### " . $params['media-type'] . " data sampling done ###");
     $conn->close();
     exit(0);
 } catch (Exception $e) {
