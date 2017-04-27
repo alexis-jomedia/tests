@@ -87,6 +87,9 @@ class Base
         $sql = "SELECT $tableName.* FROM $tableName $options";
         /** @var \mysqli_result */
         $res = $this->conn->query($sql);
+        if (!($res instanceof \mysqli_result)) {
+            var_dump($sql);
+        }
         $this->writeToFile($tableName, $res);
         $this->logger->addInfo("*** $tableName done ***");
     }

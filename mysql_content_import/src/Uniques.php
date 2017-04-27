@@ -31,7 +31,11 @@ class Uniques extends Base
         'book_external_metadatas',
         'content_filters_v4',
         'CNT_genre_book',
-        'publishers'
+        'publishers',
+        'batch_status',
+        'qa_batches',
+        'CNT_genre_audio_book',
+        'audio_book_scores'
     ];
 
     /**

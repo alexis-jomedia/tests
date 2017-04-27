@@ -105,7 +105,7 @@ class Books extends Base
             $options = sprintf($tableDefinition['options'], implode(',', $this->arrID));
             $this->processTable($tableName, $options);
         }
-//        $this->processBooks();
+
         $this->logger->addInfo("*** Processing books done ***");
     }
 
@@ -124,15 +124,5 @@ class Books extends Base
         }
 
         $this->logger->addInfo("*** book IDS done ***");
-    }
-
-    private function processBooks()
-    {
-        $this->logger->addInfo("*** book ***");
-        $sql = "SELECT * FROM book WHERE id IN (" . implode(',', $this->arrID) . ")";
-        /** @var \mysqli_result */
-        $res = $this->conn->query($sql);
-        $this->writeToFile('book', $res);
-        $this->logger->addInfo("*** book done ***");
     }
 }
