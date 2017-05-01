@@ -45,11 +45,11 @@ class Games extends Base
 
         [
             'tableName' => 'content_filters_medias',
-            'options' => ' WHERE media_type = 2 AND media_id IN (%s)'
+            'options' => ' WHERE media_type = \'games\' AND media_id IN (%s)'
         ],
         [
             'tableName' => 'media_language',
-            'options' => 'WHERE media_type = 2 AND media_id IN (%s)'
+            'options' => 'WHERE media_type = \'games\' AND media_id IN (%s)'
         ],
         [
             'tableName' => 'game_external_metadatas',
@@ -85,36 +85,20 @@ class Games extends Base
         ],
         [
             'tableName' => 'game_ratings_override',
-            'options' => ''
+            'options' => ' WHERE game_id IN (%s)'
         ]
     ];
 
     public function process()
-    {game_ratings_override
+    {
         $this->logger->addInfo("*** Processing Games ***");
-        $this->getGameIDs();
+        $arrID = $this->getIDs('game');
         foreach ($this->arrTables as $tableDefinition) {
             $tableName = $tableDefinition['tableName'];
-            $options = sprintf($tableDefinition['options'], implode(',', $this->arrID));
+            $options = sprintf($tableDefinition['options'], implode(',', $arrID));
             $this->processTable($tableName, $options);
         }
 
         $this->logger->addInfo("*** Processing Games done ***");
-    }
-
-    /**
-     * Get a list of $limit book IDs
-     */
-    private function getGameIDs()
-    {
-        $this->logger->addInfo("*** Games IDS ***");
-        $sql = "SELECT id FROM game ORDER BY rand() LIMIT " . $this->limit;
-        /** @var \mysqli_result */
-        $res = $this->conn->query($sql);
-        while ($row = $res->fetch_assoc()) {
-            $this->arrID[] = $row['id'];
-        }
-
-        $this->logger->addInfo("*** Games IDS done ***");
     }
 }

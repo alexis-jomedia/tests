@@ -28,7 +28,7 @@ class Books extends Base
         ],
         [
             'tableName' => 'media_language',
-            'options' => 'WHERE media_type = 1 AND media_id IN (%s)'
+            'options' => 'WHERE media_type = \'books\' AND media_id IN (%s)'
         ],
         [
             'tableName' => 'book_authors',
@@ -92,37 +92,20 @@ class Books extends Base
         ],
         [
             'tableName' => 'content_filters_medias',
-            'options' => ' WHERE media_type = 1 AND media_id IN (%s)'
+            'options' => ' WHERE media_type = \'book\' AND media_id IN (%s)'
         ]
     ];
 
     public function process()
     {
-        $this->logger->addInfo("*** Processing books ***");
-        $this->getBookIDs();
+        $this->logger->addInfo("*** Processing Books ***");
+        $arrID = $this->getIDs('book', 'WHERE file_format_type_id = 2 AND batch_id <> 0');
         foreach ($this->arrTables as $tableDefinition) {
             $tableName = $tableDefinition['tableName'];
-            $options = sprintf($tableDefinition['options'], implode(',', $this->arrID));
+            $options = sprintf($tableDefinition['options'], implode(',', $arrID));
             $this->processTable($tableName, $options);
         }
 
-        $this->logger->addInfo("*** Processing books done ***");
-    }
-
-    /**
-     * Get a list of $limit book IDs
-     */
-    private function getBookIDs()
-    {
-        $this->logger->addInfo("*** book IDS ***");
-        $sql = "SELECT id FROM book WHERE file_format_type_id = 2 AND batch_id <> 0 ORDER BY rand() LIMIT "
-            . $this->limit;
-        /** @var \mysqli_result */
-        $res = $this->conn->query($sql);
-        while ($row = $res->fetch_assoc()) {
-            $this->arrID[] = $row['id'];
-        }
-
-        $this->logger->addInfo("*** book IDS done ***");
+        $this->logger->addInfo("*** Processing Books done ***");
     }
 }

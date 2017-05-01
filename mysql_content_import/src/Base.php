@@ -23,6 +23,9 @@ class Base
      */
     public $conn = null;
 
+    /**
+     * @var int|null
+     */
     public $limit = null;
 
     /**
@@ -92,5 +95,27 @@ class Base
         }
         $this->writeToFile($tableName, $res);
         $this->logger->addInfo("*** $tableName done ***");
+    }
+
+    /**
+     * go grab up to $limit random IDs for the given table name
+     *
+     * @param string $tableName Name of the table whose IDs are needed
+     * @param string $options   Options to be passed to the query. Default to ''
+     * @return array
+     */
+    protected function getIDs($tableName, $options = '')
+    {
+        $this->logger->addInfo("*** Movies IDS ***");
+        $sql = "SELECT id FROM $tableName $options ORDER BY rand() LIMIT " . $this->limit;
+        /** @var \mysqli_result */
+        $res = $this->conn->query($sql);
+        $return = [];
+        while ($row = $res->fetch_assoc()) {
+            $return[] = $row['id'];
+        }
+
+        $this->logger->addInfo("*** $tableName IDS done ***");
+        return $return;
     }
 }

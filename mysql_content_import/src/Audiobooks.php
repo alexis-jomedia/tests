@@ -28,7 +28,7 @@ class Audiobooks extends Base
         ],
         [
             'tableName' => 'content_filters_medias',
-            'options' => ' WHERE media_type = 7 AND media_id IN (%s)'
+            'options' => ' WHERE media_type = \'audiobooks\' AND media_id IN (%s)'
         ],
         [
             'tableName' => 'audio_book_awards',
@@ -49,7 +49,7 @@ class Audiobooks extends Base
         ],
         [
             'tableName' => 'media_language',
-            'options' => 'WHERE media_type = 7 AND media_id IN (%s)'
+            'options' => 'WHERE media_type = \'audiobooks\' AND media_id IN (%s)'
         ],
         [
             'tableName' => 'author_audio_book',
@@ -143,29 +143,13 @@ class Audiobooks extends Base
     public function process()
     {
         $this->logger->addInfo("*** Processing Audiobooks ***");
-        $this->getAudiobookIDs();
+        $arrID = $this->getIDs('audio_book');
         foreach ($this->arrTables as $tableDefinition) {
             $tableName = $tableDefinition['tableName'];
-            $options = sprintf($tableDefinition['options'], implode(',', $this->arrID));
+            $options = sprintf($tableDefinition['options'], implode(',', $arrID));
             $this->processTable($tableName, $options);
         }
 
         $this->logger->addInfo("*** Processing Audiobooks done ***");
-    }
-
-    /**
-     * Get a list of $limit book IDs
-     */
-    private function getAudiobookIDs()
-    {
-        $this->logger->addInfo("*** audiobook IDS ***");
-        $sql = "SELECT id FROM audio_book ORDER BY rand() LIMIT " . $this->limit;
-        /** @var \mysqli_result */
-        $res = $this->conn->query($sql);
-        while ($row = $res->fetch_assoc()) {
-            $this->arrID[] = $row['id'];
-        }
-
-        $this->logger->addInfo("*** audiobook IDS done ***");
     }
 }
