@@ -34,7 +34,7 @@ $logger->addInfo("### Database done ###\n\n");
 $options = "";
 $longOptions = ['media-type:','limit::'];
 $params = getopt($options, $longOptions);
-$validMediaTypes = ['books','movies','songs','audiobooks','games','uniques'];
+$validMediaTypes = ['books','movies','albums','songs','audiobooks','games','uniques'];
 if (
     !array_key_exists('media-type', $params)
     || (array_key_exists('media-type', $params) && !in_array($params['media-type'], $validMediaTypes))
